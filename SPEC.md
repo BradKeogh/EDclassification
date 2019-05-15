@@ -17,7 +17,9 @@
 |Use|Description|Priority|Done|
 |---|-----------|--------|----|
 |**Data Prep**|Load raw data files|||
-|Load Data|* ED files, IP files * Target(daily count)||
+|Load Data|- ED files
+- IP files
+- Target(daily count)||
 ||||
 |Feature Selection|||
 ||||
