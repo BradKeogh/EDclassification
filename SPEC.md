@@ -15,6 +15,13 @@
 ## Features
 
 |Use|Description|Priority|Done|
-|---|-------------|---|---|
-|A|B| | |
+|---|-----------|--------|----|
+|*Data Prep*|Load raw data files|||
+|Load Data|||
+||||
+|Feature Selection|||
+||||
+|Modelling|||
+||||
+|Eval/vis|||
 | | | |C|
