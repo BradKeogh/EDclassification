@@ -15,5 +15,6 @@
 ## Features
 
 |Use|Description|Priority|Done|
+|---|-------------|---|---|
 |A|B| | |
 | | | |C|
