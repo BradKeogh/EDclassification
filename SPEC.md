@@ -17,13 +17,20 @@
 |Use|Description|Priority|Done|
 |---|-----------|--------|----|
 |**Data Prep**|Load raw data files|||
-|Load Data|- ED files
-- IP files
-- Target(daily count)||
+|Load Feature Data|- ED files, IP files||
+|Load Target Data| Load target(daily count of occupancy)|||
+|Calc target outliers|Find classes for each day: based on simple method||
 ||||
-|Feature Selection|||
+|**Feature Selection**|||
+|Morning features|||
+|Daily features|||
+|Lagging daily features|||
 ||||
-|Modelling|||
+|**Modelling**|||
+|Split Test/Train|||
+|Run several basic models|run models with CV and record results in table.||
+|Grid Search|Select a model and put into grid seach function||
 ||||
-|Eval/vis|||
-| | | |C|
+|**Eval/vis**|||
+|Eval model on test set function| | ||
+||||
