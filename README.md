@@ -1,7 +1,7 @@
 # EDclassification
 Emergency Department Classification Tool
 
-To scale project attempting to follow the advice here: 
+To scale project attempting to follow the advice here: https://towardsdatascience.com/lessons-from-a-real-machine-learning-project-part-1-from-jupyter-to-luigi-bdfd0b050ca5
 
 
 ## Repo structure
