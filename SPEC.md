@@ -16,7 +16,7 @@
 
 |Use|Description|Priority|Done|
 |---|-----------|--------|----|
-|**Data Prep**|Load raw data files|||
+|**Data Prep**||||
 |Load Raw Feature Data|ED files, IP files.||
 |Load Target Data|Load target(daily count of occupancy).|||
 |Calc target outliers|Find classes for each day: based on simple method.||
