@@ -1,8 +1,9 @@
 #### utils_eval
 # Scripts originally copied from jupyter notebook in python-practice repo. See example use there. 
 
-from sklearn.metrics import roc_auc_score, f1_score, precision_recall_curve, roc_curve
+from sklearn.metrics import roc_auc_score, f1_score, precision_recall_curve, roc_curve, accuracy_score
 from matplotlib import pyplot as plt
+import pandas as pd
 
 #### example calls
 # BinClassEval(lgr1, X_train, y_train)
@@ -175,4 +176,28 @@ def get_cross_validation_scores(model, X, y, scoring='f1'):
     scores = cross_val_score(model, X, y, cv=4, scoring=scoring)
     return(scores)
     
+
+def save_model_to_log(path_to_log, dataversion, model, gridsearch, notes = None, df_row=None):
+    """
+    Open log df, add new row with model + training info. Save df to pickle again.
     
+    Input
+    =====
+    path_to_log, str, string to location of pikcle file.
+    dataversion, str, name of data version.
+    model, sklearn model object, which has been fit.  
+    gridsearch, sklearn gridsearch object, which has been fit.
+    notes, str, (optional) text describing model.
+    df_row, int, (optional) integer row to replace in dataframe. Suggested if re-reporting an updated model which has already been logged.
+    
+    """
+    model_log = pd.read_pickle(path_to_log)
+    #### get gridsearch results out of gridsearch object.
+    gridsearch_results = pd.DataFrame(gridsearch.cv_results_)
+    mean_train = gridsearch_results.query('rank_test_score == 1')['mean_train_score'].values.round(3)
+    mean_valid = gridsearch_results.query('rank_test_score == 1')['mean_test_score'].values.round(3)
+    
+    model_log = model_log.append({'dataV': dataversion,'model':model,'gridsearch':gridsearch_results,'mean_train': mean_train,
+                                  'mean_valid':mean_valid ,'notes': notes}, ignore_index=True)
+    model_log.to_pickle(path_to_log)
+    return(print('Model logged.'))

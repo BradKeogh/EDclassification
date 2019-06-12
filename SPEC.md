@@ -34,4 +34,4 @@
 ||||
 |**Eval/vis**|||
 |Eval model on test set function|Given a model that has been fitted and test data, calculate metrics on test set and plot PR and ROC curves.||y|
-||||
+|Model results log|Log all data needed to rerun model, and all evaluation metrics.||

@@ -1,0 +1,8 @@
+name: class
+dependencies:
+  - python=3.6
+  - numpy
+  - pandas
+  - scikit-learn
+  - jupyter
+  - matplotlib
