@@ -2,3 +2,22 @@ NOTEBOOK NAMING FORMATS
 =======================
 
 D*, data version naming, means this notebook was used/is used to work on DataSet1.
+
+
+
+DATASETS
+========
+v1, data that was made by a mixture of flosp/featuretools: some daily features, some morning ones. No lagged variables.
+D2, data made by scripts only in this repository, made from 'raw' patient-level record data that had already been preprocessed by flosp; uses target that was orignally made in flosp (same as v1).
+
+
+NOTEBOOKS
+=========
+D2_daily_data_to_model_FULLPIPELINE_only_targetfeature, used on the numeric target feature and day of week/month etc, incldued lags+derivatives, better perofrmance with derivatives (unsure 2nd derivatives help much), tried pca (not useful).
+
+D2_daily_data_to_model_FULLPIPELINE, as above but uses other ED and IP data too. Having only previosu day data as well does not improve performance. Just adding in lots of new variable lags + derivs does not help the model. I guess it's being drowned in useless data.
+
+D2_daily_data_to_model_FULLPIPELINE_find_best_features, notebook includes all features (ED and IP) and all lags/derivatives. Started with 190 features and after removing the least importand features step by step ended up with ~60 with a mean_test_score ~ 0.49. L2 model showed most promise. L1 was less suecpitible to change with reducing features (in iterating we finiished at 35 features were it was slowly climbing mena_test ~ 0.48). Ridge was useless, the level was no where close to the logistic regression models.
+
+
+
