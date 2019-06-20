@@ -1,4 +1,4 @@
-name: class
+name: EDclass
 dependencies:
   - python=3.6
   - numpy
@@ -6,3 +6,4 @@ dependencies:
   - scikit-learn
   - jupyter
   - matplotlib
+  - py-xgboost
