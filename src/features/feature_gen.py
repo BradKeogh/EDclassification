@@ -1,4 +1,5 @@
-
+import pandas as pd
+import numpy as np
 
 def create_lagged_vars_array(df, col_name, number_lags):
     ""
