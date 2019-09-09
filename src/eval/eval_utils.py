@@ -5,6 +5,7 @@ from sklearn.metrics import roc_auc_score, f1_score, precision_recall_curve, roc
 from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
+import pickle
 
 #### example calls
 # BinClassEval(lgr1, X_train, y_train)
@@ -215,8 +216,11 @@ class ModelCVEvaluation():
         "Calcs scores for training sets for each fold. NOTE: is this valid as each fold not independent."
         return
         
-    def save_as_pickle(path):
-        "Saves evaluation class as a pickle object."
+    def save_as_pickle(path, filename):
+        "Saves evaluation class as a pickle object. NOTE: Not currently working."
+        outfile = open(filename,'wb')
+        pickle.dump(self, outfile) # 
+        outfile.close()
         return
     
     def plot_PR_curve(self, y_true, y_prob_pred, title):
