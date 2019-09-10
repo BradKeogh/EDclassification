@@ -292,11 +292,24 @@ class ModelCVEvaluation():
         return
     
     def plot_PR_curve_each_valid_set(self):
+        "Loop through folds and plot a PR curve for each fold."
+
+        def print_label_info(array):
+            "given array of labels print size and proportion of labels = 1."
+            ones = array.sum()
+            class_fraction = ones/len(array)
+            print("VALIDATION SAMPLES: " + str(len(array)) )
+            print("CLASS 1 PROPORTION: " + '{0:.2f}'.format(class_fraction))
+            return
+
         for fold in np.arange(1,self.cv_splits +1):
             col_name = 'fold' + str(fold)
             y_labels = self.valid_y_labels_byfold[col_name].dropna().values
             y_proba_pred = self.valid_probab_preds_byfold[col_name].dropna().values
             self.plot_PR_curve(y_labels, y_proba_pred, col_name)
+            print('-'*20)
+            print(col_name)
+            print_label_info(y_labels)
         return
 
     def print_data_facts(self):
