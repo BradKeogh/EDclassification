@@ -157,8 +157,8 @@ class ModelCVEvaluation():
             # values are placed into the same index as CV.
             self.valid_probab_preds_byfold.loc[valid_index, fold_name] = valid_proba_preds_split
             
-            train_proba_preds_split = self.model.predict_proba(X_train)[:,1].tolist() # make predictions to this fold of valid data
-            self.train_probab_preds_byfold.loc[train_index, fold_name] = train_proba_preds_split #[0:5]
+            train_proba_preds_split = self.model.predict_proba(X_train)[:,1].tolist() # make predictions to this fold of train data
+            self.train_probab_preds_byfold.loc[train_index, fold_name] = train_proba_preds_split # assign fold to dataframe as new col
             
             #### assign y labels
             self.valid_y_labels_byfold.loc[valid_index, fold_name] = y_valid
@@ -187,7 +187,7 @@ class ModelCVEvaluation():
         These are in same order as the folds.
         
         """
-        #### assign all valid probability to one list
+        #### assign all validation probability predictions to one list
         valid_probab_preds_all = self.valid_probab_preds_byfold.stack().values #note this only works by chance! stack sorts by index
         self.valid_probab_preds_all = valid_probab_preds_all
         #### find the y_labels for full validation set in one list
@@ -199,25 +199,59 @@ class ModelCVEvaluation():
         self.valid_brier_score_loss_all = brier_score_loss(valid_y_true_all, valid_probab_preds_all)
         
         #### calc scores for each CV fold
-        apscores = []
-        bscores = []
+        valid_apscores = []
+        valid_bscores = []
+        train_apscores = []
+        train_bscores = []
+
         for fold_no in np.arange(1, self.cv_splits + 1):
             col_name = 'fold' + str(fold_no)
+            # validation scores
             y_true = self.valid_y_labels_byfold[col_name].dropna()
             y_prob_pred = self.valid_probab_preds_byfold[col_name].dropna()
-            apscores.append(average_precision_score(y_true, y_prob_pred))
-            bscores.append(brier_score_loss(y_true, y_prob_pred))
+            valid_apscores.append(average_precision_score(y_true, y_prob_pred))
+            valid_bscores.append(brier_score_loss(y_true, y_prob_pred))
+            # training scores
+            y_true = self.train_y_labels_byfold[col_name].dropna()
+            y_prob_pred = self.train_probab_preds_byfold[col_name].dropna()
+            train_apscores.append(average_precision_score(y_true, y_prob_pred))
+            train_bscores.append(brier_score_loss(y_true, y_prob_pred))
         
-        self.CV_average_precision_scores = apscores
-        self.CV_briers_score_losses = bscores
+        # dont think these attributes are used anywhere else as more convienient in df form below
+        self.validCV_average_precision_scores = valid_apscores
+        self.validCV_briers_score_losses = valid_bscores
+
+        self.trainCV_average_precision_scores = train_apscores
+        self.trainCV_briers_score_losses = train_bscores
         
-        self.CV_scores = pd.DataFrame(data={'average_precision': apscores, 'briers_score_loss':bscores})
-        print('CV results')
+        self.validCV_scores = pd.DataFrame(data={'average_precision': valid_apscores, 'briers_score_loss': valid_bscores})
+        self.trainCV_scores = pd.DataFrame(data={'average_precision': train_apscores, 'briers_score_loss': train_bscores})
+
+        print('INPUT DATA')
+        print('='*10)
+        self.print_data_facts()
         print('='*30)
-        # print(self.CV_scores)
-        print(self.CV_scores.describe())
-        
-        
+        print('CV RESULTS')
+        self.print_scores()
+        print('='*30)
+
+        return
+
+    def print_scores(self, metrics = ['average_precision', 'briers_score_loss']):
+        "Print results from train and validation sets. results_df in format with columns "
+        for metric in metrics:
+            print('='*10)
+            print(metric)
+            tmean = "{0:.3f}".format(self.trainCV_scores[metric].mean())
+            tstd = "{0:.3f}".format(self.trainCV_scores[metric].std())
+            print("TRAIN MEAN (std): ", tmean, "(", tstd ,")")
+            vmean = "{0:.3f}".format(self.validCV_scores[metric].mean())
+            vstd = "{0:.3f}".format(self.validCV_scores[metric].std())
+            print("VALID MEAN (std): ", vmean, "(", vstd ,")")
+            diff_means = "{0:.3f}".format(self.trainCV_scores[metric].mean() - self.validCV_scores[metric].mean())
+            print("DIFF BETWEEN MEAN: ", diff_means)
+
+
         return
     
     def get_train_scores(self):
@@ -264,7 +298,19 @@ class ModelCVEvaluation():
             y_proba_pred = self.valid_probab_preds_byfold[col_name].dropna().values
             self.plot_PR_curve(y_labels, y_proba_pred, col_name)
         return
+
+    def print_data_facts(self):
+        "Calc and print class imbalance from a numpy array."
+        ones = self.y.sum()
+        class_fraction = ones/len(self.y)
+        print("FEATURES:" + str(self.X.shape[1]) )
+        print("TRAINING SAMPLES: " + str(self.X.shape[0]) )
+        print("CLASS 1 PROPORTION: " + '{0:.2f}'.format(class_fraction))
+        return
     
         return
 
-    
+
+
+
+
