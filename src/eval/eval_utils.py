@@ -100,6 +100,9 @@ class ModelCVEvaluation():
         
         # call methods to conduct evaluation
         self.evaluate()
+
+        # retrain model on all available data so ready for test predictions
+        self.retrain_model()
         
         return
     
@@ -111,6 +114,11 @@ class ModelCVEvaluation():
         self.get_predictions()
         self.get_valid_scores()
         self.plot_PR_curve(self.valid_y_true_all ,self.valid_probab_preds_all, 'PR curves for all CV folds')
+        return
+
+    def retrain_model(self):
+        "retrain model on all available data so ready for test predictions."
+        self.model.fit(self.X, self.y)
         return
     
     def get_predictions(self):
