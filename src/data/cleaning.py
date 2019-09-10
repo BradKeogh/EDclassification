@@ -51,3 +51,30 @@ def remove_duplicate_columns(df):
     find_duplicate_column_names(df)
     return()
 
+    
+def tidy_column_heads(df):
+    """
+    Function makes all column names lowercase and replaces any whitespace with _'s. Removes wild characters.
+    Input: df, df, df for cleaning
+    Return: df, df, dataframe with tidy names
+    """
+    rename_cols = dict() # make dictionary of old column names and new ones
+    for i in df.columns:
+        j = i.lower()
+        j = j.strip()
+        j = j.replace(' ','_')
+        j = j.replace('.','_')
+        j = j.replace('?','_')
+        j = j.replace('&','_')
+        j = j.replace('%','perc')
+        j = j.replace('(','')
+        j = j.replace(')','')
+        j = j.replace(':','')
+        j = j.replace(';','')
+        j = j.replace('-','')
+        j = j.replace('/','')
+        #j = j.replace('\','')
+        rename_cols[i] = j
+
+    df = df.rename(columns=rename_cols)
+    return(df)
