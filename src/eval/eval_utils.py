@@ -15,6 +15,86 @@ import pickle
 
 from sklearn.model_selection import TimeSeriesSplit
 
+class BinLabelEval():
+    """ 
+    Makes all evalutation you need to assess binary classifcation models.
+    Suggested use for final evaluation once models have been decided. e.g. running on test set. 
+    Built for sklearn models: some functionality requires model to have either a predict proba or decision function.
+    """
+    
+    
+    def __init__(self, y_pred, y_true):
+        """
+        Input
+        -----
+        Model, sklearn model, (that has had .fit() method called aready).
+        X, df/numpy array, containing features
+        y, df/numpy array, containing binary target
+        """
+        #### assign inputs
+        self.y_pred = y_pred
+        self.y_true = y_true
+            
+        #### run evaluation
+        self.AUC()
+        self.F1()
+        self.accuracy()
+        self.precision()
+        self.recall()
+        # self.f1_manual()
+
+        return
+    
+    def AUC(self):
+        "Prints and returns AUC score."
+        AUC = roc_auc_score(self.y_pred, self.y_true).round(3)
+        self.AUC = AUC
+        print('AUC: ', AUC) # NOTE: sklearn doc says use prob, if not use decision function.
+        return
+    
+    def F1(self):
+        "Prints and returns F1 score."
+        F1 = f1_score(self.y_pred, self.y_true).round(3)
+        self.F1 = F1
+        print('F1 score: ', F1)
+        return
+
+    def precision(self):
+        "Prints precision score."
+        precision = precision_score(self.y_pred, self.y_true).round(3)
+        self.precision = precision
+        print('precision score: ', precision)
+        return
+    
+    def recall(self):
+        "Prints recall score."
+        recall = recall_score(self.y_pred, self.y_true).round(3)
+        self.recall = recall
+        print('recall scare: ', recall)
+        return
+
+    def f1_manual(self):
+        " calcs and prints f1 score from precision and recall scores. (Rather than using f1_score metric)."
+        precision = self.precision
+        recall = self.recall
+        F1 = (2 * (precision * recall) / (precision + recall)).round(3)
+        self.f1_manual = F1
+        print('F1 manual calc: ', F1)
+        return
+    
+    def accuracy(self):
+        "Prints and returns accuracy score."
+        accuracy = accuracy_score(self.y_pred, self.y_true).round(3)
+        self.accuracy = accuracy
+        print('accuracy: ', accuracy)
+        return
+    
+    def confusion_matrix(self):
+        "Prints confusion matrix."
+        return
+
+        return
+
 def cross_val_predict_tscv(model, X, y, method = 'predict', n_splits = 4):
     """
     Using TimeSeriesCV means that you dont get a prediction for the first traiing fold.
